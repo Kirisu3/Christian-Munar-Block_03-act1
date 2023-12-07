@@ -6,5 +6,7 @@
 <gradient
     android:startColor="@color/scarlet"
     android:centerColor="@color/spanish_red"
-    android:endColor="@color/desire"
+    android:endColor="@color/desire"/>
+
+
 </shape>
