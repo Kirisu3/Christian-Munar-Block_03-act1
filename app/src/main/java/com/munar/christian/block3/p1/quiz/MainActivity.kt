@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import java.sql.Time
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,10 +26,76 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val addBtn: ImageButton = findViewById(R.id.btnAdd)
-        addBtn.setOnClickListener{
-           setTimeFunction()
+        addBtn.setOnClickListener {
+            setTimeFunction()
+        }
+        val startBtn: Button = findViewById(R.id.btnPlayPause)
+        addBtn.setOnClickListener {
+            startTimerSetup()
+        }
+        val resetBtn: ImageButton = findViewById(R.id.ib_reset)
+        resetBtn.setOnClickListener {
+            resetTime()
+        }
+        val addTimeTv: TextView = findViewById(R.id.tv_addTime)
+        addTimeTv.setOnClickListener {
+            addExtraTime()
         }
     }
+
+    private fun addExtraTime() {
+        val progressBar: ProgressBar = findViewById(R.id.pbTimer)
+        if (timeselected != 0) {
+            timeselected += 15
+            progressBar.max = timeselected
+            timePause()
+            startTimer(pauseOffSet)
+            Toast.makeText(this, "10 sec addedd", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun resetTime() {
+        if (timeCountDown != null) {
+            timeCountDown!!.cancel()
+            timeProgress = 0
+            timeselected = 0
+            pauseOffSet = 0
+            timeCountDown = null
+            val startBtn: Button = findViewById(R.id.btnPlayPause)
+            startBtn.text = "Start"
+            isStart = true
+            val progressBar = findViewById<ProgressBar>(R.id.btnPlayPause)
+            progressBar.progress = 0
+            val timeLeftTv: TextView = findViewById(R.id.tvTimeLeft)
+            timeLeftTv.text = "0"
+        }
+    }
+
+    private fun timePause() {
+        if (timeCountDown != null) {
+            timeCountDown!!.cancel()
+        }
+    }
+
+
+    private fun startTimerSetup() {
+        val startBtn: Button = findViewById(R.id.btnPlayPause)
+        if (timeselected > timeProgress) {
+            if (isStart) {
+                startBtn.text = "Pause"
+                startTimer(pauseOffSet)
+                isStart = false
+            } else {
+                isStart = true
+                startBtn.text = "Resume"
+                timePause()
+            }
+        } else {
+            Toast.makeText(this, "Enter Time", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 
     private fun startTimer(pauseOfSetL: Long)
     {
@@ -38,13 +105,18 @@ class MainActivity : AppCompatActivity() {
             (timeselected*1000).toLong() - pauseOfSetL*1000, 1000)
         {
             override fun onTick(p0: Long) {
-                TODO("Not yet implemented")
+                timeProgress++
+                pauseOffSet = timeselected.toLong()- p0/1000
+                progressBar.progress = timeselected-timeProgress
+                val timeLeftTv: TextView = findViewById(R.id.tvTimeLeft)
+                timeLeftTv.text = (timeselected - timeProgress).toString()
             }
 
             override fun onFinish() {
-                TODO("Not yet implemented")
+                resetTime()
+                Toast.makeText(this@MainActivity, "Times Up!", Toast.LENGTH_SHORT).show()
             }
-        }
+        }.start()
     }
     private fun setTimeFunction()
     {
@@ -55,19 +127,26 @@ class MainActivity : AppCompatActivity() {
         val btnStart: Button = findViewById(R.id.btnPlayPause)
         val progressBar = findViewById<ProgressBar>(R.id.pbTimer)
         timeDialog.findViewById<Button>(R.id.btnOk).setOnClickListener {
-            if (timeSet.text.isEmpty())
-            {
+            if (timeSet.text.isEmpty()) {
                 Toast.makeText(this, "Enter time Duration", Toast.LENGTH_SHORT).show()
-            }
-            else
-            {
+            } else {
+                resetTime()
                 timeLeftTv.text = timeSet.text
                 btnStart.text = "Start"
                 timeselected = timeSet.text.toString().toInt()
                 progressBar.max = timeselected
             }
+            timeDialog.dismiss()
+        }
             timeDialog.show()
         }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (timeCountDown!=null)
+        {
+            timeCountDown?.cancel()
+            timeProgress=0
+    }
     }
 }

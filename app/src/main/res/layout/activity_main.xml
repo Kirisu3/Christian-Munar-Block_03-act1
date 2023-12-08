@@ -26,7 +26,7 @@
            android:indeterminate="false"
            android:max="10"
            android:progress="10"
-           android:rotation="90"
+           android:rotation="-90"
            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
            android:background="@drawable/gray_progressbar_background"
            android:progressDrawable="@drawable/red_progressbar_background">
