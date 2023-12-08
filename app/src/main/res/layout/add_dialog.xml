@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <EditText
-    android:id="@+id/geTime"
+    android:id="@+id/etGetTime"
     android:layout_width="342dp"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
@@ -22,12 +22,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/geTime"
+        app:layout_constraintTop_toBottomOf="@+id/etGetTime"
         android:layout_margin="10dp"
         android:background="@drawable/button_bg"
         android:textSize="20dp"
         android:textStyle="bold"
         android:text="ok"
-        android:textColor="@color/white"
-        =""/>
+        android:textColor="@color/white"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
